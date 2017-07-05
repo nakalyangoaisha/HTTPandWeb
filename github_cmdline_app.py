@@ -3,9 +3,9 @@
 This example uses docopt with the built in cmd module to demonstrate an
 interactive command application.
 Usage:
-    example.py input <name>
-    example.py (-i | --interactive)
-    example.py (-h | --help | --version)
+    github_cmdline_app.py input <name>
+    github_cmdline_app.py (-i | --interactive)
+    github_cmdline_app.py (-h | --help | --version)
 Options:
     -i, --interactive  Interactive Mode
     -h, --help  Show this screen and exit.
@@ -52,13 +52,13 @@ def docopt_cmd(func):
 
 class GithubInteractiveProgram(cmd.Cmd):
     intro = 'Welcome to my interactive program!' \
-            + ' (type help for a list of commands.)'
+            + ': Type help for a list of commands.'
     prompt = '(Input github username) '
     file = None
 
     @docopt_cmd
     def do_input(self, arg):
-        """Usage: [input] <name>"""
+        """Usage: input <name>"""
         name = arg['<name>']
         if name is not None:
             # The variable result stores github repos api for a particular user
@@ -69,14 +69,16 @@ class GithubInteractiveProgram(cmd.Cmd):
             # in a user's github account
             if result.status_code == 200:
                 repos = result.json()
+                print('\t')
                 print('REPOSITORIES:')
                 for repo in repos:
                     print(repo['name'])
+
+            # if request not successful, http code error code is returned
             else:
                 print('HTTP ERROR %d.' % result.status_code)
-        else:
-            print('BAD USER NAME')
 
+        print('\t')
         print(arg)
 
     @staticmethod
