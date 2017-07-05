@@ -78,3 +78,18 @@ class GithubInteractiveProgram(cmd.Cmd):
             print('BAD USER NAME')
 
         print(arg)
+
+    @staticmethod
+    def do_quit(arg):
+        """Quits out of Interactive Mode."""
+
+        print('Good Bye!')
+        exit()
+
+
+opt = docopt(__doc__, sys.argv[1:])
+
+if opt['--interactive']:
+    GithubInteractiveProgram().cmdloop()
+
+print(opt)
