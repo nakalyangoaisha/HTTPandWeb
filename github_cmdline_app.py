@@ -50,3 +50,31 @@ def docopt_cmd(func):
     return fn
 
 
+class GithubInteractiveProgram(cmd.Cmd):
+    intro = 'Welcome to my interactive program!' \
+            + ' (type help for a list of commands.)'
+    prompt = '(Input github username) '
+    file = None
+
+    @docopt_cmd
+    def do_input(self, arg):
+        """Usage: [input] <name>"""
+        name = arg['<name>']
+        if name is not None:
+            # The variable result stores github repos api for a particular user
+            # obtained using the requests http client library
+            result = requests.get('https://api.github.com/users/' + name + '/repos')
+
+            # if request is successful, the function returns the list of repositories
+            # in a user's github account
+            if result.status_code == 200:
+                repos = result.json()
+                print('REPOSITORIES:')
+                for repo in repos:
+                    print(repo['name'])
+            else:
+                print('HTTP ERROR %d.' % result.status_code)
+        else:
+            print('BAD USER NAME')
+
+        print(arg)
